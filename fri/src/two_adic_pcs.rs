@@ -39,6 +39,7 @@ pub trait TwoAdicFriPcsGenericConfig: Default {
     type FriMmcs: DirectMmcs<Self::Challenge> + Sync;
 }
 
+#[derive(Debug)]
 pub struct TwoAdicFriPcsConfig<Val, Challenge, Challenger, Dft, InputMmcs, FriMmcs>(
     PhantomData<(Val, Challenge, Challenger, Dft, InputMmcs, FriMmcs)>,
 );
@@ -71,6 +72,7 @@ where
     type FriMmcs = FriMmcs;
 }
 
+#[derive(Debug)]
 pub struct TwoAdicFriPcs<C: TwoAdicFriPcsGenericConfig> {
     fri: FriConfig<C::FriMmcs>,
     dft: C::Dft,

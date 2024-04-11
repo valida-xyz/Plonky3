@@ -19,7 +19,7 @@ use crate::FieldMerkleTree;
 /// - `P`: a leaf value TODO
 /// - `H`: the leaf hasher
 /// - `C`: the digest compression function
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct FieldMerkleTreeMmcs<P, H, C, const DIGEST_ELEMS: usize> {
     hash: H,
     compress: C,
@@ -60,7 +60,6 @@ where
         prover_data: &FieldMerkleTree<P::Scalar, DIGEST_ELEMS>,
     ) -> (Vec<Vec<P::Scalar>>, Vec<[P::Scalar; DIGEST_ELEMS]>) {
         let max_height = self.get_max_height(prover_data);
-        let index = index % max_height; // TODO: should this be necessary or is the fact that this can change index indicative of a bug?
         let log_max_height = log2_ceil_usize(max_height);
 
         let openings = prover_data
@@ -70,7 +69,6 @@ where
                 let log2_height = log2_ceil_usize(matrix.height());
                 let bits_reduced = log_max_height - log2_height;
                 let reduced_index = index >> bits_reduced;
-                std::println!("max_height = {:?}, log_max_height = {:?}, height = {:?}, log2_height = {:?}, bits_reduced = {:?}, index = {:?}, reduced_index = {:?}", max_height, log_max_height, matrix.height(), log2_height, bits_reduced, index, reduced_index);
                 matrix.row(reduced_index).collect()
             })
             .collect_vec();
