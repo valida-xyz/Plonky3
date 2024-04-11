@@ -1,16 +1,18 @@
 use core::ops::{Add, Mul, Sub};
 
+use alloc::vec;
 use p3_field::{AbstractExtensionField, AbstractField, ExtensionField, Field};
 use p3_matrix::dense::RowMajorMatrix;
 use p3_matrix::MatrixRowSlices;
 
 /// An AIR (algebraic intermediate representation).
-pub trait BaseAir<F>: Sync {
+pub trait BaseAir<F: AbstractField>: Sync {
     /// The number of columns (a.k.a. registers) in this AIR.
     fn width(&self) -> usize;
 
-    fn preprocessed_trace(&self) -> Option<RowMajorMatrix<F>> {
-        None
+    fn preprocessed_trace(&self) -> RowMajorMatrix<F> {
+        let w = self.width();
+        RowMajorMatrix::new(vec![F::zero(); w], w)
     }
 }
 
