@@ -36,6 +36,11 @@ impl<P, H, C, const DIGEST_ELEMS: usize> FieldMerkleTreeMmcs<P, H, C, DIGEST_ELE
     }
 }
 
+#[derive(Clone, Debug)]
+pub enum FieldMerkleTreeMmcsError {
+    IncorrectRoot
+}
+
 impl<P, H, C, const DIGEST_ELEMS: usize> Mmcs<P::Scalar>
     for FieldMerkleTreeMmcs<P, H, C, DIGEST_ELEMS>
 where
@@ -51,7 +56,7 @@ where
     type ProverData = FieldMerkleTree<P::Scalar, DIGEST_ELEMS>;
     type Commitment = [P::Scalar; DIGEST_ELEMS];
     type Proof = Vec<[P::Scalar; DIGEST_ELEMS]>;
-    type Error = ();
+    type Error = FieldMerkleTreeMmcsError;
     type Mat<'a> = RowMajorMatrixView<'a, P::Scalar> where H: 'a, C: 'a;
 
     fn open_batch(
@@ -145,7 +150,7 @@ where
         if &root == commit {
             Ok(())
         } else {
-            Err(())
+            Err(FieldMerkleTreeMmcsError::IncorrectRoot)
         }
     }
 }
