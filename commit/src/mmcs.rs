@@ -21,7 +21,7 @@ use serde::Serialize;
 /// streaming manner.
 pub trait Mmcs<T>: Clone {
     type ProverData;
-    type Commitment: Clone + Serialize + DeserializeOwned;
+    type Commitment: PartialEq + Debug + Clone + Serialize + DeserializeOwned;
     type Proof: Serialize + DeserializeOwned;
     type Error: Debug;
     type Mat<'a>: MatrixRows<T> + Sync

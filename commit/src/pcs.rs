@@ -18,7 +18,7 @@ use serde::Serialize;
 // TODO: Should we have a super-trait for weakly-binding PCSs, like FRI outside unique decoding radius?
 pub trait Pcs<Val: Field, In: MatrixRows<Val>> {
     /// The commitment that's sent to the verifier.
-    type Commitment: Clone + Serialize + DeserializeOwned;
+    type Commitment: PartialEq + Debug + Clone + Serialize + DeserializeOwned;
 
     /// Data that the prover stores for committed polynomials, to help the prover with opening.
     type ProverData;
