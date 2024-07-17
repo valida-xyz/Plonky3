@@ -3,6 +3,7 @@
 use alloc::vec;
 use alloc::vec::Vec;
 use core::fmt::Debug;
+use p3_matrix::dense::RowMajorMatrix;
 
 use p3_challenger::FieldChallenger;
 use p3_field::{ExtensionField, Field};
@@ -85,6 +86,18 @@ where
     where
         'a: 'b;
 
+    // Compute the (shifted) low-degree extensions only without computing the commitment.
+    fn compute_coset_ldes_batches(
+        &self,
+        polynomials: Vec<In>,
+        coset_shifts: Vec<Val>,
+    ) -> Vec<RowMajorMatrix<Val>>;
+
+    fn compute_lde_batch(&self, polynomials: In) -> RowMajorMatrix<Val> {
+        self.compute_coset_ldes_batches(vec![polynomials], vec![Val::one()])
+            .pop()
+            .expect("length of output of compute_coset_ldes_batches should be the same as length of the input")
+    }
     // Commit to polys that are already defined over a coset.
     fn commit_shifted_batches(
         &self,
